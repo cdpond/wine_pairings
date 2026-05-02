@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Pond House">
+<title>Pond House Pairings</title>
+<style>
+  :root {
+    --cream: #f7f4ee;
+    --parchment: #ede9e0;
+    --border: rgba(0,0,0,0.10);
+    --border-strong: rgba(0,0,0,0.18);
+    --text: #1c1a16;
+    --text-muted: #7a7670;
+    --text-faint: #aaa89e;
+    --white: #ffffff;
+    --tag-white-bg: #faeeda;
+    --tag-white-fg: #5a3200;
+    --tag-white-border: #d4922a;
+    --tag-red-bg: #faece7;
+    --tag-red-fg: #4a1b0c;
+    --tag-red-border: #c84a20;
+    --tag-spark-bg: #eeedfe;
+    --tag-spark-fg: #26215c;
+    --tag-spark-border: #6a60c8;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    overscroll-behavior: none;
+  }
+
+  /* Header */
+  .app-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    padding: calc(var(--safe-top) + 14px) 18px 0;
+  }
+  .header-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .app-title {
+    font-size: 20px;
+    font-weight: normal;
+    letter-spacing: 0.01em;
+    color: var(--text);
+  }
+  .app-subtitle {
+    font-size: 11px;
+    color: var(--text-faint);
+    font-family: 'Helvetica Neue', sans-serif;
+    letter-spacing: 0.02em;
+  }
+
+  /* Filter pills */
+  .filters {
+    display: flex;
+    gap: 7px;
+    padding-bottom: 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    flex-shrink: 0;
+    padding: 7px 16px;
+    border-radius: 20px;
+    border: 1px solid var(--border-strong);
+    background: var(--white);
+    color: var(--text-muted);
+    font-size: 13px;
+    font-family: 'Helvetica Neue', sans-serif;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s, border-color 0.12s;
+    white-space: nowrap;
+    -webkit-appearance: none;
+  }
+  .filter-btn.active {
+    background: var(--text);
+    color: var(--white);
+    border-color: var(--text);
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 12px;
+    padding: 9px 18px;
+    background: var(--parchment);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-family: 'Helvetica Neue', sans-serif;
+    color: var(--text-muted);
+  }
+  .legend-dot {
+    width: 10px; height: 10px;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .dot-white { background: var(--tag-white-bg); border: 1px solid var(--tag-white-border); }
+  .dot-red { background: var(--tag-red-bg); border: 1px solid var(--tag-red-border); }
+  .dot-spark { background: var(--tag-spark-bg); border: 1px solid var(--tag-spark-border); }
+  .legend-goto {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 11px; font-family: 'Helvetica Neue', sans-serif; color: var(--text-muted);
+  }
+  .goto-sample {
+    font-size: 10px; padding: 1px 7px; border-radius: 8px;
+    background: var(--tag-white-bg); color: var(--tag-white-fg);
+    border: 1.5px solid var(--tag-white-fg);
+    font-weight: 700; font-family: 'Helvetica Neue', sans-serif;
+  }
+
+  /* Scrollable content */
+  .content {
+    padding: 14px 14px calc(var(--safe-bottom) + 20px);
+  }
+
+  /* Section */
+  .section { margin-bottom: 18px; }
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    font-family: 'Helvetica Neue', sans-serif;
+    margin-bottom: 6px;
+    padding-left: 2px;
+  }
+
+  /* Food cards */
+  .food-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 13px 10px;
+    margin-bottom: 6px;
+  }
+  .food-card.hidden { display: none; }
+  .food-name {
+    font-size: 14px;
+    font-weight: normal;
+    color: var(--text);
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 4px 11px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-family: 'Helvetica Neue', sans-serif;
+    white-space: nowrap;
+    line-height: 1.3;
+  }
+  .tag-white { background: var(--tag-white-bg); color: var(--tag-white-fg); }
+  .tag-red { background: var(--tag-red-bg); color: var(--tag-red-fg); }
+  .tag-sparkling { background: var(--tag-spark-bg); color: var(--tag-spark-fg); }
+  .tag-goto {
+    font-weight: 700;
+    outline: 2px solid currentColor;
+    outline-offset: -2px;
+  }
+
+  .section.hidden { display: none; }
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="header-top">
+    <span class="app-title">Pond House</span>
+    <span class="app-subtitle">WINE &amp; FOOD</span>
+  </div>
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all',this)">All</button>
+    <button class="filter-btn" onclick="setFilter('white',this)">White</button>
+    <button class="filter-btn" onclick="setFilter('red',this)">Red</button>
+    <button class="filter-btn" onclick="setFilter('sparkling',this)">Sparkling</button>
+  </div>
+</div>
+
+<div class="legend">
+  <div class="legend-item"><span class="legend-dot dot-white"></span>White</div>
+  <div class="legend-item"><span class="legend-dot dot-red"></span>Red</div>
+  <div class="legend-item"><span class="legend-dot dot-spark"></span>Sparkling</div>
+  <div class="legend-goto"><span>Go-to:</span><span class="goto-sample">Chablis</span></div>
+</div>
+
+<div class="content" id="content"></div>
+
+<script>
+const W = 'white', R = 'red', S = 'sparkling';
+const wines = {
+  'Chablis': W, 'Upper Loire': W, 'Vouvray': W, 'Muscadet': W,
+  'Dry Riesling (Mosel)': W, 'Pinot Blanc': W, 'Alvarinho': W,
+  'Grüner Veltliner': W, 'Picpoul': W, 'Oregon Chardonnay': W,
+  'Vermentino': W, 'Verdicchio': W,
+  'Syrah': R, 'Pinot Noir': R, 'Chinon': R, 'Côtes du Rhône': R,
+  "Barbera d'Alba": R, 'Rosso di Montalcino': R, 'Etna Rosso': R,
+  'Nobile di Montepulciano': R, 'Bordeaux': R,
+  'Brut': S, 'Brut Rosé': S,
+};
+
+const foods = [
+  { cat: 'Fish & Seafood', items: [
+    { name: 'Baked/grilled salmon', pairings: ['Chablis','Upper Loire','Oregon Chardonnay','Vermentino','Alvarinho','Pinot Noir','Brut'], goto: 'Chablis' },
+    { name: 'Spicy/Asian fish', pairings: ['Alvarinho','Picpoul','Grüner Veltliner','Vermentino','Muscadet','Brut'], goto: 'Alvarinho' },
+  ]},
+  { cat: 'Meat & Grills', items: [
+    { name: 'Burgers and brats', pairings: ["Barbera d'Alba",'Côtes du Rhône','Etna Rosso','Brut Rosé'], goto: "Barbera d'Alba" },
+    { name: 'Grilled ribeye and strip', pairings: ['Bordeaux','Syrah','Nobile di Montepulciano','Rosso di Montalcino'], goto: 'Bordeaux' },
+    { name: 'Roast/grilled chicken', pairings: ['Chinon','Pinot Noir','Chablis','Oregon Chardonnay','Verdicchio','Brut'], goto: 'Chinon' },
+    { name: 'Fried chicken', pairings: ['Brut','Brut Rosé','Muscadet','Picpoul','Côtes du Rhône'], goto: 'Brut' },
+  ]},
+  { cat: 'Casual & Snacks', items: [
+    { name: 'Friday pizza', pairings: ["Barbera d'Alba",'Etna Rosso','Côtes du Rhône','Brut Rosé'], goto: "Barbera d'Alba" },
+    { name: 'Charcuterie', pairings: ['Brut','Brut Rosé','Pinot Blanc','Upper Loire','Chinon','Pinot Noir'], goto: 'Brut' },
+    { name: 'Cheese board', pairings: ['Vouvray','Upper Loire','Oregon Chardonnay','Pinot Noir','Chinon',"Barbera d'Alba",'Brut'], goto: 'Vouvray' },
+    { name: 'Hummus/olives/raw veg', pairings: ['Grüner Veltliner','Picpoul','Vermentino','Muscadet','Brut'], goto: 'Grüner Veltliner' },
+  ]},
+  { cat: 'Salads', items: [
+    { name: 'Salads with vinaigrette', pairings: ['Upper Loire','Muscadet','Grüner Veltliner','Dry Riesling (Mosel)','Alvarinho','Brut'], goto: 'Upper Loire' },
+    { name: 'Heavier salads (Caesar)', pairings: ['Chablis','Oregon Chardonnay','Pinot Blanc','Verdicchio','Brut'], goto: 'Chablis' },
+  ]},
+  { cat: 'Vegetables', items: [
+    { name: 'Roasted/grilled veg', pairings: ['Grüner Veltliner','Verdicchio','Chinon',"Barbera d'Alba",'Etna Rosso','Brut'], goto: 'Grüner Veltliner' },
+  ]},
+  { cat: 'World Cuisines', items: [
+    { name: 'Mexican', pairings: ['Alvarinho','Picpoul','Grüner Veltliner',"Barbera d'Alba",'Côtes du Rhône','Brut'], goto: 'Alvarinho' },
+    { name: 'Mediterranean', pairings: ['Vermentino','Verdicchio','Picpoul','Alvarinho','Etna Rosso','Rosso di Montalcino','Brut'], goto: 'Vermentino' },
+    { name: 'Asian', pairings: ['Grüner Veltliner','Alvarinho','Picpoul','Dry Riesling (Mosel)','Muscadet','Brut'], goto: 'Grüner Veltliner' },
+  ]},
+  { cat: 'Hearty Mains', items: [
+    { name: 'Braises/stews', pairings: ['Syrah','Bordeaux','Nobile di Montepulciano','Rosso di Montalcino','Côtes du Rhône','Pinot Noir'], goto: 'Syrah' },
+    { name: 'Light pastas/grains', pairings: ['Verdicchio','Pinot Blanc','Upper Loire',"Barbera d'Alba",'Etna Rosso','Brut'], goto: 'Verdicchio' },
+    { name: 'Heavy/creamy pastas', pairings: ['Oregon Chardonnay','Verdicchio',"Barbera d'Alba",'Rosso di Montalcino','Nobile di Montepulciano'], goto: 'Oregon Chardonnay' },
+  ]},
+];
+
+let currentFilter = 'all';
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderContent();
+}
+
+function renderContent() {
+  const content = document.getElementById('content');
+  content.innerHTML = '';
+
+  foods.forEach(section => {
+    const visibleItems = section.items.filter(item =>
+      currentFilter === 'all' || item.pairings.some(p => wines[p] === currentFilter)
+    );
+    if (!visibleItems.length) return;
+
+    const sectionEl = document.createElement('div');
+    sectionEl.className = 'section';
+
+    const label = document.createElement('div');
+    label.className = 'section-label';
+    label.textContent = section.cat;
+    sectionEl.appendChild(label);
+
+    visibleItems.forEach(item => {
+      const filtered = currentFilter === 'all'
+        ? item.pairings
+        : item.pairings.filter(p => wines[p] === currentFilter);
+
+      const gotoWine = filtered.includes(item.goto) ? item.goto : filtered[0];
+
+      const card = document.createElement('div');
+      card.className = 'food-card';
+
+      const name = document.createElement('div');
+      name.className = 'food-name';
+      name.textContent = item.name;
+      card.appendChild(name);
+
+      const tags = document.createElement('div');
+      tags.className = 'tags';
+
+      filtered.forEach(w => {
+        const tag = document.createElement('span');
+        tag.className = 'tag tag-' + wines[w] + (w === gotoWine ? ' tag-goto' : '');
+        tag.textContent = w;
+        tags.appendChild(tag);
+      });
+
+      card.appendChild(tags);
+      sectionEl.appendChild(card);
+    });
+
+    content.appendChild(sectionEl);
+  });
+}
+
+renderContent();
+</script>
+</body>
+</html>
